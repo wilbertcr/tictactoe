@@ -1,6 +1,5 @@
 class Tic_tac_toe
   
-
   attr_reader :board
   
   def initialize()
@@ -72,7 +71,7 @@ class Tic_tac_toe
     patterns_matrix = [find_vertical_pattern(),find_horizontal_pattern(),find_diagonal_pattern()]
     winning_strategy = patterns_matrix.rassoc(2)
     blocking_strategy = patterns_matrix.rassoc(1)
-    no_strategy = get_first_available_move2
+    no_strategy = get_first_available_move
     move = winning_strategy 
     if move.nil?
       move = blocking_strategy

@@ -4,7 +4,7 @@ HUMAN = 1
 MACHINE = 2
 NO_WINNER_YET = -1
 
-game = Tic_tac_toe_inefficient.new()
+game = Tic_tac_toe.new()
 
 game.display_game_instructions()
 
