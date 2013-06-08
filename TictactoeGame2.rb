@@ -1,10 +1,10 @@
-require 'Tic_tac_toe_efficient.rb'
+require 'Tic_tac_toe_inefficient.rb'
 
 HUMAN = 1
 MACHINE = 2
 NO_WINNER_YET = -1
 
-game = Tic_tac_toe_efficient.new()
+game = Tic_tac_toe_inefficient.new()
 
 game.display_game_instructions()
 
