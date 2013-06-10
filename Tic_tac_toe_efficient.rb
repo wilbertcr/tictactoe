@@ -29,6 +29,7 @@ class Tic_tac_toe
         start_time = Time.now
         machine_move = game.get_machine_move()
         game.update_board("machine",machine_move)
+        puts "Machine move was: #{machine_move}"
         game.display_board()
         @winner = game.check_winner()
         end_time = Time.now
@@ -37,6 +38,7 @@ class Tic_tac_toe
         start_time = Time.now
         machine_move = game.get_machine_move()
         game.update_board("machine",machine_move)
+        puts "Machine move was: #{machine_move}"
         game.display_board()
         @winner = game.check_winner()
         end_time = Time.now
@@ -50,7 +52,7 @@ class Tic_tac_toe
         @winner = game.check_winner()
       end
     end
-    
+
     if @winner == @HUMAN
       puts "Congratulations Human"
     elsif @winner == @MACHINE
