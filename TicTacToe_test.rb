@@ -1,13 +1,11 @@
-require 'Tic_tac_toe.rb'
-
+require 'Tic_tac_toe_efficient.rb'
 
 tictactest = Tic_tac_toe.new()
 
-
-#tictactest.display_board()
-#tictactest.display_game_instructions()
-#tictactest.whos_first?()
-#tictactest.get_human_move()
+tictactest.display_board()
+tictactest.display_game_instructions()
+tictactest.get_first_player()
+tictactest.get_human_move()
 puts "Checking horizontal"
 puts "#{tictactest.check_winner([1,1,1,0,0,0,0,0,0])}"
 puts "#{tictactest.check_winner([0,0,0,1,1,1,0,0,0])}"
@@ -34,5 +32,3 @@ puts "#{tictactest.check_winner([0,2,0,0,2,0,0,2,0])}"
 puts "#{tictactest.check_winner([0,0,2,0,0,2,0,0,2])}"
 
 puts "#{tictactest.check_tie([0,0,2,0,0,2,0,0,2])}"
-
-tictactest.get_human_move()
