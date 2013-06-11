@@ -10,7 +10,6 @@ class Tic_tac_toe
   end
 
   def play()
-
     game = Tic_tac_toe.new()
     game.display_game_instructions()
     @first_Player = game.get_first_player()
@@ -76,6 +75,14 @@ class Tic_tac_toe
     display_board([1,2,3,4,5,6,7,8,9],false)
   end
   
+  def update_board(player,position)
+    if player == "human"
+      board[position] = 1
+    else
+      board[position] = 2
+    end
+  end
+
   def display_board(board=@board,security=true)
     puts "-------------\n"
     puts "|#{symbol_display(board[0],security)}|#{symbol_display(board[1],security)}|#{symbol_display(board[2],security)}|\n"
@@ -123,6 +130,21 @@ class Tic_tac_toe
     player
   end
 
+  def get_human_move()
+    move = 0
+    puts "Please provide your move:"
+    STDOUT.flush()
+    move = gets.chomp.to_i
+    if !(1..9).include?(move)
+      puts "Sorry, only numbers between 1 and 9"
+      get_human_move()
+    elsif board[move-1]!=0
+      puts "Sorry, that position is taken"
+      get_human_move()
+    end
+    move-1
+  end
+
   def get_machine_move(board=@board)
     start_time = Time.now
     patterns_matrix = [find_vertical_pattern(),find_horizontal_pattern(),find_diagonal_pattern()]
@@ -137,8 +159,31 @@ class Tic_tac_toe
       end
     end
     move.first
+  end  
+  
+  def check_tie(board=@board)
+    its_a_tie = true
+    no_tie = false
+    if board.index(0) == nil
+      return its_a_tie
+    else
+      return no_tie
+    end
   end
   
+  def check_winner(board=@board)
+    start_time = Time.now
+    checks_matrix = [vertical_win(board), horizontal_win(board), diagonal_win(board)]
+    winners = checks_matrix.rassoc(true)
+    if winners.nil?
+      end_time = Time.now
+      return -1
+    else
+      end_time = Time.now
+      return winners.first
+    end
+  end
+
   def find_vertical_pattern(board=@board)
     no_pattern_match_found = nil
     top_position = 0
@@ -220,55 +265,6 @@ class Tic_tac_toe
     move
   end
 
-    
-  def get_human_move()
-    move = 0
-    puts "Please provide your move:"
-    STDOUT.flush()
-    move = gets.chomp.to_i
-    if !(1..9).include?(move)
-      puts "Sorry, only numbers between 1 and 9"
-      get_human_move()
-    elsif board[move-1]!=0
-      puts "Sorry, that position is taken"
-      get_human_move()
-    end
-    move-1
-  end
-
-  def update_board(player,position)
-    if player == "human"
-      board[position] = 1
-    else
-      board[position] = 2
-    end
-  end
-  
-  
-  def check_tie(board=@board)
-    its_a_tie = true
-    no_tie = false
-    if board.index(0) == nil
-      return its_a_tie
-    else
-      return no_tie
-    end
-  end
-  
-  def check_winner(board=@board)
-    start_time = Time.now
-    checks_matrix = [vertical_win(board), horizontal_win(board), diagonal_win(board)]
-    winners = checks_matrix.rassoc(true)
-    if winners.nil?
-      end_time = Time.now
-      return -1
-    else
-      end_time = Time.now
-      return winners.first
-    end
-  end
-
-
   def vertical_win(board)
     winner_not_found = false
     if (board[0]==board[3] && board[3]==board[6] && board[6] != 0)
@@ -320,5 +316,7 @@ class Tic_tac_toe
       return[0,winner_not_found]
     end
   end
+
+
 
 end
