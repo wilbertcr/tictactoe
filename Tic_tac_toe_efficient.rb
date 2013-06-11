@@ -1,6 +1,7 @@
 class Tic_tac_toe
   
   attr_reader :board
+
   
   def initialize()
     @board = [0,0,0,0,0,0,0,0,0]
@@ -63,8 +64,6 @@ class Tic_tac_toe
       puts "Game was a tie"
     end
   end
-
-  private
     
   def display_game_instructions()  
     puts "Goal:"
@@ -137,17 +136,25 @@ class Tic_tac_toe
 
   def get_human_move()
     move = 0
-    puts "Please provide your move:"
-    STDOUT.flush()
-    move = gets.chomp.to_i
-    if !(1..9).include?(move)
-      puts "Sorry, only numbers between 1 and 9"
-      get_human_move()
-    elsif board[move-1]!=0
-      puts "Sorry, that position is taken"
-      get_human_move()
+    while moveIsOutsideBoard(move) || desiredMoveIsTaken(move)
+      puts "Please provide your move:"
+      STDOUT.flush()
+      move = gets.chomp.to_i
+      if moveIsOutsideBoard(move)
+        puts "Sorry, only numbers between 1 and 9"
+      elsif desiredMoveIsTaken(move)
+        puts "Sorry, that position is taken"
+      end  
     end
-    move-1
+    move-1 #Array is 0...8, player's options are 1..9
+  end
+  
+  def moveIsOutsideBoard(move)
+    return !(1..9).include?(move)
+  end
+  
+  def desiredMoveIsTaken(move)
+    return board[move-1]!=0
   end
 
   def get_machine_move(board=@board)
@@ -156,8 +163,9 @@ class Tic_tac_toe
     winning_strategy = patterns_matrix.rassoc(2)
     blocking_strategy = patterns_matrix.rassoc(1)
     no_strategy = get_first_available_move
-    move = winning_strategy 
-    
+
+    move = winning_strategy     
+    puts "Found winning strategy?: #{move}"
     if move.nil?
       move = blocking_strategy
       if move.nil?
