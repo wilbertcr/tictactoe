@@ -27,17 +27,20 @@ class Tic_tac_toe
         end
         start_time = Time.now
         machine_move = game.get_machine_move()
+        end_time = Time.now
         game.update_board("machine",machine_move)
         puts "Machine move was: #{machine_move}"
+        puts "Machine move took #{end_time-start_time} seconds to complete"
         game.display_board()
         @winner = game.check_winner()
-        end_time = Time.now
-        puts "It took: #{end_time-start_time} seconds"
+        
       else
         start_time = Time.now
         machine_move = game.get_machine_move()
+        end_time = Time.now
         game.update_board("machine",machine_move)
-        puts "Machine move was: #{machine_move}"
+        puts "Machine move is: #{machine_move}"
+        puts "Machine move process took #{end_time-start_time} seconds to complete"
         game.display_board()
         @winner = game.check_winner()
         end_time = Time.now
@@ -60,7 +63,9 @@ class Tic_tac_toe
       puts "Game was a tie"
     end
   end
-  
+
+  private
+    
   def display_game_instructions()  
     puts "Goal:"
     puts ""
@@ -77,9 +82,9 @@ class Tic_tac_toe
   
   def update_board(player,position)
     if player == "human"
-      board[position] = 1
+      board[position] = @HUMAN
     else
-      board[position] = 2
+      board[position] = @MACHINE
     end
   end
 
@@ -146,12 +151,13 @@ class Tic_tac_toe
   end
 
   def get_machine_move(board=@board)
-    start_time = Time.now
+    
     patterns_matrix = [find_vertical_pattern(),find_horizontal_pattern(),find_diagonal_pattern()]
     winning_strategy = patterns_matrix.rassoc(2)
     blocking_strategy = patterns_matrix.rassoc(1)
     no_strategy = get_first_available_move
     move = winning_strategy 
+    
     if move.nil?
       move = blocking_strategy
       if move.nil?
@@ -159,31 +165,9 @@ class Tic_tac_toe
       end
     end
     move.first
+    
   end  
   
-  def check_tie(board=@board)
-    its_a_tie = true
-    no_tie = false
-    if board.index(0) == nil
-      return its_a_tie
-    else
-      return no_tie
-    end
-  end
-  
-  def check_winner(board=@board)
-    start_time = Time.now
-    checks_matrix = [vertical_win(board), horizontal_win(board), diagonal_win(board)]
-    winners = checks_matrix.rassoc(true)
-    if winners.nil?
-      end_time = Time.now
-      return -1
-    else
-      end_time = Time.now
-      return winners.first
-    end
-  end
-
   def find_vertical_pattern(board=@board)
     no_pattern_match_found = nil
     top_position = 0
@@ -200,6 +184,7 @@ class Tic_tac_toe
         board[top_position]==0)
         return [top_position,board[mid_position]]
       end
+      #Moves to next column
       top_position +=1
       mid_position +=1
       bottom_position +=1
@@ -213,7 +198,6 @@ class Tic_tac_toe
     mid_position = 1
     right_position = 2
     3.times do 
-    #Line one
       if (board[left_position] != 0 && 
         board[left_position]==board[mid_position] && 
         board[right_position]==0)
@@ -227,6 +211,7 @@ class Tic_tac_toe
         board[left_position]==0)
         return [left_position,board[mid_position]]
       end
+      #Moves to next line
       left_position +=3
       mid_position +=3
       right_position +=3
@@ -257,12 +242,40 @@ class Tic_tac_toe
   end  
   
   def get_first_available_move()
-    if @board[4] == 0
-      move = [4,nil]
-    else
+    unless @board[4] == 0
       move = [@board.index(0),nil]
+    else
+      move = [4,nil]
     end
     move
+  end
+
+  
+  def check_tie(board=@board)
+    
+    its_a_tie = true
+    no_tie = false
+    unless boardIsFull
+      no_tie 
+    else
+      its_a_tie
+    end
+
+  end
+  
+  def boardIsFull()
+    return board.index(0) == nil
+  end
+  
+  def check_winner(board=@board)
+    start_time = Time.now
+    checks_matrix = [vertical_win(board), horizontal_win(board), diagonal_win(board)]
+    winners = checks_matrix.rassoc(true)
+    unless winners.nil?
+      winners.first
+    else
+      @NO_WINNER_YET
+    end
   end
 
   def vertical_win(board)
@@ -316,7 +329,5 @@ class Tic_tac_toe
       return[0,winner_not_found]
     end
   end
-
-
 
 end
