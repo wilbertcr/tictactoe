@@ -3,10 +3,14 @@ require "./Machine.rb"
 class Players
   
   attr_accessor :human, :machine
-  
-  def initialize()
-    @human = Human.new
-    @machine = Machine.new
+
+  def human
+    Human().new()
+  end
+
+  def machine
+    Machine.new
   end
   
+    
 end

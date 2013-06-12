@@ -1,14 +1,18 @@
+require './Constants.rb'
+
 class Machine
   attr_accessor :getMove
   
   @patternsMatrix
-  
+  @board
+
   def initialize()
     @patternsMatrix = []
   end
   
-  def getMove(board) 
-    strategiesArray = getStrategiesArray(board)
+  def getMove(board)
+    @board = board 
+    strategiesArray = getStrategiesArray()
     winning_strategy = strategiesArray[0]  
     blocking_strategy = strategiesArray[1]
     no_strategy = strategiesArray[2]
@@ -24,79 +28,65 @@ class Machine
   
   private
   
-  def getStrategiesArray(board)
+  def getStrategiesArray()
     @patternsMatrix = []
-    find_vertical_pattern(board)
-    find_horizontal_pattern(board)
-    find_diagonal_pattern(board)
-    get_first_available_move(board)
-    return [@patternsMatrix.rassoc(2),@patternsMatrix.rassoc(1),@patternsMatrix.rassoc(-1)]
+    find_vertical_pattern()
+    find_horizontal_pattern()
+    find_diagonal_pattern()
+    get_first_available_move()
+    return [@patternsMatrix.rassoc(Constants.MACHINE),@patternsMatrix.rassoc(1),@patternsMatrix.rassoc(-1)]
   end
   
-  def find_vertical_pattern(board)
-    no_pattern_match_found = nil
+  def find_vertical_pattern()
     top_position = 0
     mid_position = 3
     bottom_position = 6
     3.times do 
-      checkLinesForPattern(board,top_position, mid_position, bottom_position)
-      #Moving to next column
+      checkLinesForPattern(top_position, mid_position, bottom_position)
       top_position +=1
       mid_position +=1
       bottom_position +=1
     end
-    return no_pattern_match_found
   end
   
-  def find_horizontal_pattern(board)
-    no_pattern_match_found = nil
+  def find_horizontal_pattern()
     left_position = 0
     mid_position = 1
     right_position = 2
     3.times do 
-      checkLinesForPattern(board,left_position, mid_position, right_position)
-      #Moving to next line
+      checkLinesForPattern(left_position, mid_position, right_position)
       left_position +=3
       mid_position +=3
       right_position +=3
     end
-    return no_pattern_match_found
   end
 
-  def find_diagonal_pattern(board)
+  def find_diagonal_pattern()
     first = 0
     second = 4
     third = 8
-    #Diagonals
-    2.times do
-      #Checking Diagonal 
-      checkLinesForPattern(board,first, second, third)
-      #Moving to antiDiagonal
+    2.times do 
+      checkLinesForPattern(first, second, third)
       first = 2
       third = 6
     end
-    return nil
   end  
   
-  def checkLinesForPattern(board,firstPosition, secondPosition, thirdPosition)
-    if    (board[firstPosition] != 0 && board[firstPosition]==board[secondPosition] && 
-      board[thirdPosition]==0)
-      @patternsMatrix.push([thirdPosition,board[firstPosition]]) 
-    elsif (board[firstPosition] != 0 && board[firstPosition]==board[thirdPosition] && 
-      board[secondPosition]==0)
-      @patternsMatrix.push([secondPosition,board[firstPosition]])
-    elsif (board[secondPosition] != 0 && board[secondPosition]==board[thirdPosition] && 
-      board[firstPosition]==0)
-      @patternsMatrix.push([firstPosition,board[secondPosition]])
+  def checkLinesForPattern(firstPosition, secondPosition, thirdPosition)
+    if    (@board[firstPosition] != 0 && @board[firstPosition]==@board[secondPosition] && 
+      @board[thirdPosition]==0)
+      @patternsMatrix.push([thirdPosition,@board[firstPosition]]) 
+    elsif (@board[firstPosition] != 0 && @board[firstPosition]==@board[thirdPosition] && 
+      @board[secondPosition]==0)
+      @patternsMatrix.push([secondPosition,@board[firstPosition]])
+    elsif (@board[secondPosition] != 0 && @board[secondPosition]==@board[thirdPosition] && 
+      @board[firstPosition]==0)
+      @patternsMatrix.push([firstPosition,@board[secondPosition]])
     end
   end
   
-  def get_first_available_move(board)
-    unless board[4] == 0
-      @patternsMatrix.push([board.index(0),-1])
-    else
-      @patternsMatrix.push([4,-1])
-    end
+  def get_first_available_move()
+    @board[4] == 0 ? @patternsMatrix.push([4,-1]) : @patternsMatrix.push([@board.index(0),-1]) 
   end
 
 end

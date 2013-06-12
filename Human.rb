@@ -1,9 +1,11 @@
+require_relative './Players.rb'
 
 class Human
   
   attr_accessor :getMove
   
   def initialize()
+    
   end
   
   def getMove(board)

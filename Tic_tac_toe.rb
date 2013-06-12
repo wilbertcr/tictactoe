@@ -1,80 +1,64 @@
 require "./Board.rb"
+require "./Constants.rb"
 require "./Players.rb"
+require "./Display.rb"
 
 class Tic_tac_toe
-  
+
   def initialize()
-    @Players = Players.new
+    @Player1 = Players.human
+    @Player2 = Players.machine
     @Board = Board.new()
-    @HUMAN = 1
-    @MACHINE = 2
-    @NO_WINNER_YET = -1
   end
 
   def play()
-    runPreGameRoutine()
-    while gameIsNotOver
-      if @first_Player == @HUMAN
-        doHumanTurn()
-        updateWinnerValue
-        if gameIsOver
+    run_pre_game_routine()
+    while !game_over?
+      if @first_Player == Constants.HUMAN
+        human_turn()
+        update_winner_value
+        if game_over?
           break
         end
-        doMachineTurn()
-        updateWinnerValue
+        machine_turn()
+        update_winner_value
       else
-        doMachineTurn()
-        updateWinnerValue
-        if gameIsOver
+        machine_turn()
+        update_winner_value
+        if game_over?
           break
         end
-        doHumanTurn()
+        human_turn()
+        update_winner_value
       end
     end
-    
-    displayGameResult(@winner)
+    Display.game_result(@winner)
   end
 
   private
   
-  def updateWinnerValue()
-    @winner = @Board.get_winner(@Board.getBoard)
+  def update_winner_value()
+    @winner = @Board.check_board_for_winner(@Board.getBoard)
   end
     
-  def runPreGameRoutine()
-    display_game_instructions()
+  def run_pre_game_routine()
+    Display.game_instructions()
     @first_Player = get_first_player()
-    @winner = @Board.get_winner(@Board.getBoard)
-    @Board.display()    
-  end
-  
-  def display_game_instructions()  
-    puts "Goal:"
-    puts ""
-    puts "The goal of Tic Tac Toe is to be the first player to get"
-    puts "three in a row on a 3x3 grid."
-    puts ""
-    puts "Instructions:"
-    puts ""
-    puts "In order to enter your move, please provide an integer between"
-    puts "1 and 9, the numbers represent the positions in the board the"
-    puts "following way:"
-    @Board.display([1,2,3,4,5,6,7,8,9],false)
+    @winner = @Board.check_board_for_winner(@Board.getBoard)
+    Display.board(@Board.getBoard)    
   end
 
   def get_first_player()
-    human_first = 1
-    machine_first = 2
     player = nil
     @option = " "    
-    while inputIsIncorrect()
+    while !correct_input?()
       puts "Would you like to go first, or to have the machine go first? (y/n)"
       STDOUT.flush()
       @option = gets.chomp.downcase 
       if @option == "y"
-        player = human_first
+        player = Constants.HUMAN
       elsif @option == "n"
-        player = machine_first
+        player = Constants.MACHINE
       else
         puts "Sorry, its either 'y' or 'n'" 
       end 
@@ -82,42 +66,31 @@ class Tic_tac_toe
     player
   end
 
-  def inputIsIncorrect()
-    return @option != "y" && @option !="n"
+  def correct_input?()
+    return @option == "y" || @option =="n"
   end
 
-  def gameIsNotOver()
-    return @winner == @NO_WINNER_YET && !@Board.isGameTied?(@Board.getBoard)
+  def game_over?()
+    return @winner != Constants.OTHER || @Board.game_tied?(@Board.getBoard)
   end 
-  
-  def gameIsOver()
-    return @winner != @NO_WINNER_YET || @Board.isGameTied?(@Board.getBoard)
-  end
-  
-  def doMachineTurn()
+    
+  def machine_turn()
     machine_move = @Players.machine.getMove(@Board.getBoard)
     puts "Machine move is: #{machine_move+1}"
-    updateAndDisplayBoard("machine", machine_move)
+    update_and_display_board("machine", machine_move)
   end
   
-  def doHumanTurn()
+  def human_turn()
     human_move = @Players.human.getMove(@Board.getBoard)
-    updateAndDisplayBoard("human", human_move)
+    update_and_display_board("human", human_move)
   end
   
-  def updateAndDisplayBoard(player,move)
+  def update_and_display_board(player,move)
     @Board.update(player,move)
-    @Board.display()
+    Display.board(@Board.getBoard)
   end
-  
-  def displayGameResult(winner)
-    if winner == @HUMAN
-          puts "Congratulations Human"
-        elsif winner == @MACHINE
-          puts "The machine won :("
-        else #Game is a tie
-          puts "Game was a tie"
-    end
-  end
-        
+          
 end
+
+Game = Tic_tac_toe.new()
+Game.play()
