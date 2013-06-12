@@ -1,4 +1,4 @@
-require './Tic_tac_toe_efficient.rb'
+require './Tic_tac_toe.rb'
 
 game = Tic_tac_toe.new()
 
