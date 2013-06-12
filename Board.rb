@@ -16,7 +16,6 @@ class Board
     else 
       @getBoard[position] = @MACHINE
     end
-    puts defined? @getBoard
   end
   
   def display(board=@getBoard,security=true)
@@ -41,7 +40,6 @@ class Board
   end
   
   def get_winner(board)
-    puts "Board on check_winner: #{board}"
     checks_matrix = [vertical_win(board), horizontal_win(board), diagonal_win(board)]
     winners = checks_matrix.rassoc(true)
     unless winners.nil?
@@ -77,7 +75,6 @@ class Board
   end
     
   def vertical_win(board)
-    puts "Board on vertical win: #{board}"
     winner_not_found = false
     if (board[0]==board[3] && board[3]==board[6] && board[6] != 0)
       return winner?(board,6)
@@ -91,7 +88,6 @@ class Board
   end  
   
   def horizontal_win(board)
-    puts "Board on horizontal win: #{board}"
     winner_not_found = false
     if (board[0]==board[1] && board[1]==board[2] && board[2] != 0)
       return winner?(board,2)
@@ -105,7 +101,6 @@ class Board
   end
   
   def diagonal_win(board)
-    puts "Board on diagonal win: #{board}"
     winner_not_found = false
     if (board[0]==board[4] && board[4]==board[8] && board[8] != 0)
       return winner?(board,8)
@@ -114,11 +109,9 @@ class Board
     else 
       return [0,winner_not_found]
     end
-  end  
-  
+  end    
   
   def winner?(board,position)
-    puts "Board on winner?: #{board}"
     human_won = 1
     machine_won = 2
     winner_found = true
@@ -131,7 +124,5 @@ class Board
       return[0,winner_not_found]
     end
   end
-
-
 
 end

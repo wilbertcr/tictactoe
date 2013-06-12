@@ -12,59 +12,42 @@ class Tic_tac_toe
   end
 
   def play()
-    game = Tic_tac_toe.new()
-    game.display_game_instructions()
-    @first_Player = game.get_first_player()
-    @winner = @Board.get_winner(@Board.getBoard)
-    @Board.display()
-    puts "First one:#{game.gameIsNotOver}"
-    puts "Second one:#{(@winner == @NO_WINNER_YET && !@Board.isGameTied?(@Board.getBoard))}"
-    while @winner == @NO_WINNER_YET && !@Board.isGameTied?(@Board.getBoard)
+    runPreGameRoutine()
+    while gameIsNotOver
       if @first_Player == @HUMAN
-        human_move = @Players.human.getMove(@Board.getBoard)
-        @Board.update("human",human_move)
-        @Board.display()
-        @winner = @Board.get_winner(@Board.getBoard)
-        if @winner != @NO_WINNER_YET || @Board.isGameTied?(@Board.getBoard)
+        doHumanTurn()
+        updateWinnerValue
+        if gameIsOver
           break
         end
-        machine_move = @Players.machine.getMove(@Board.getBoard)
-        @Board.update("machine",machine_move)
-        @Board.display()
-        @winner = @Board.get_winner(@Board.getBoard)
+        doMachineTurn()
+        updateWinnerValue
       else
-        machine_move = @Players.machine.getMove(@Board.getBoard)
-        @Board.update("machine",machine_move)
-        @Board.display()
-        @winner = @Board.get_winner()
-        end_time = Time.now
-        if @winner != @NO_WINNER_YET || @Board.isGameTied?(@Board.getBoard)
+        doMachineTurn()
+        updateWinnerValue
+        if gameIsOver
           break
         end
-        human_move = @Players.human.getMove(@Board.getBoard)
-        @Board.update("human",human_move)
-        @Board.display()
-        @winner = @Board.get_winner()
+        doHumanTurn()
       end
     end
     
-    if @winner == @HUMAN
-      puts "Congratulations Human"
-    elsif @winner == @MACHINE
-      puts "The machine won :("
-    else #Game is a tie
-      puts "Game was a tie"
-    end
+    displayGameResult(@winner)
   end
+
+  private
   
-  def gameIsNotOver()
-    return (@winner == @NO_WINNER_YET && !@Board.isGameTied?(@Board.getBoard))
-  end
-  
-  def gameIsOver()
-    return (@winner != @NO_WINNER_YET || @Board.isGameTied?(@Board.getBoard))
+  def updateWinnerValue()
+    @winner = @Board.get_winner(@Board.getBoard)
   end
     
+  def runPreGameRoutine()
+    display_game_instructions()
+    @first_Player = get_first_player()
+    @winner = @Board.get_winner(@Board.getBoard)
+    @Board.display()    
+  end
+  
   def display_game_instructions()  
     puts "Goal:"
     puts ""
@@ -78,8 +61,7 @@ class Tic_tac_toe
     puts "following way:"
     @Board.display([1,2,3,4,5,6,7,8,9],false)
   end
-  
-   
+
   def get_first_player()
     human_first = 1
     machine_first = 2
@@ -99,9 +81,43 @@ class Tic_tac_toe
     end
     player
   end
-  
+
   def inputIsIncorrect()
     return @option != "y" && @option !="n"
   end
 
+  def gameIsNotOver()
+    return @winner == @NO_WINNER_YET && !@Board.isGameTied?(@Board.getBoard)
+  end 
+  
+  def gameIsOver()
+    return @winner != @NO_WINNER_YET || @Board.isGameTied?(@Board.getBoard)
+  end
+  
+  def doMachineTurn()
+    machine_move = @Players.machine.getMove(@Board.getBoard)
+    puts "Machine move is: #{machine_move+1}"
+    updateAndDisplayBoard("machine", machine_move)
+  end
+  
+  def doHumanTurn()
+    human_move = @Players.human.getMove(@Board.getBoard)
+    updateAndDisplayBoard("human", human_move)
+  end
+  
+  def updateAndDisplayBoard(player,move)
+    @Board.update(player,move)
+    @Board.display()
+  end
+  
+  def displayGameResult(winner)
+    if winner == @HUMAN
+          puts "Congratulations Human"
+        elsif winner == @MACHINE
+          puts "The machine won :("
+        else #Game is a tie
+          puts "Game was a tie"
+    end
+  end
+        
 end

@@ -1,14 +1,17 @@
 class Machine
   attr_accessor :getMove
   
+  @patternsMatrix
+  
   def initialize()
+    @patternsMatrix = []
   end
   
-  def getMove(board)
-    patterns_matrix = [find_vertical_pattern(board),find_horizontal_pattern(board),find_diagonal_pattern(board)]
-    winning_strategy = patterns_matrix.rassoc(2)
-    blocking_strategy = patterns_matrix.rassoc(1)
-    no_strategy = get_first_available_move(board)
+  def getMove(board) 
+    strategiesArray = getStrategiesArray(board)
+    winning_strategy = strategiesArray[0]  
+    blocking_strategy = strategiesArray[1]
+    no_strategy = strategiesArray[2]
     move = winning_strategy     
     if move.nil?
       move = blocking_strategy
@@ -19,8 +22,16 @@ class Machine
     move.first
   end  
   
-  
   private
+  
+  def getStrategiesArray(board)
+    @patternsMatrix = []
+    find_vertical_pattern(board)
+    find_horizontal_pattern(board)
+    find_diagonal_pattern(board)
+    get_first_available_move(board)
+    return [@patternsMatrix.rassoc(2),@patternsMatrix.rassoc(1),@patternsMatrix.rassoc(-1)]
+  end
   
   def find_vertical_pattern(board)
     no_pattern_match_found = nil
@@ -28,17 +39,8 @@ class Machine
     mid_position = 3
     bottom_position = 6
     3.times do 
-      if    (board[top_position] != 0 && board[top_position]==board[mid_position] && 
-        board[bottom_position]==0)
-        return [bottom_position,board[top_position]]
-      elsif (board[top_position] != 0 && board[top_position]==board[bottom_position] && 
-        board[mid_position]==0)
-        return [mid_position,board[top_position]]
-      elsif (board[mid_position] != 0 && board[mid_position]==board[bottom_position] && 
-        board[top_position]==0)
-        return [top_position,board[mid_position]]
-      end
-      #Moves to next column
+      checkLinesForPattern(board,top_position, mid_position, bottom_position)
+      #Moving to next column
       top_position +=1
       mid_position +=1
       bottom_position +=1
@@ -52,56 +54,49 @@ class Machine
     mid_position = 1
     right_position = 2
     3.times do 
-      if (board[left_position] != 0 && 
-        board[left_position]==board[mid_position] && 
-        board[right_position]==0)
-        return [right_position,board[left_position]]
-      elsif (board[left_position] != 0 && 
-        board[left_position]==board[right_position] && 
-        board[mid_position]==0)
-        return [mid_position,board[left_position]]
-      elsif (board[mid_position] != 0 && 
-        board[mid_position]==board[right_position] && 
-        board[left_position]==0)
-        return [left_position,board[mid_position]]
-      end
-      #Moves to next line
+      checkLinesForPattern(board,left_position, mid_position, right_position)
+      #Moving to next line
       left_position +=3
       mid_position +=3
       right_position +=3
     end
     return no_pattern_match_found
   end
-  
+
   def find_diagonal_pattern(board)
     first = 0
     second = 4
     third = 8
     #Diagonals
-    2.times do 
-     if board[first] != 0 && board[first]==board[second] && 
-       board[third]==0
-       return [third,board[first]]
-     elsif board[first] != 0 && board[first]==board[third] && 
-       board[second]==0
-       return [second,board[first]]
-     elsif board[third] != 0 && board[second]==board[third] && 
-       board[first]==0
-       return [first,board[second]]
-     end
+    2.times do
+      #Checking Diagonal 
+      checkLinesForPattern(board,first, second, third)
+      #Moving to antiDiagonal
       first = 2
       third = 6
     end
     return nil
   end  
   
+  def checkLinesForPattern(board,firstPosition, secondPosition, thirdPosition)
+    if    (board[firstPosition] != 0 && board[firstPosition]==board[secondPosition] && 
+      board[thirdPosition]==0)
+      @patternsMatrix.push([thirdPosition,board[firstPosition]]) 
+    elsif (board[firstPosition] != 0 && board[firstPosition]==board[thirdPosition] && 
+      board[secondPosition]==0)
+      @patternsMatrix.push([secondPosition,board[firstPosition]])
+    elsif (board[secondPosition] != 0 && board[secondPosition]==board[thirdPosition] && 
+      board[firstPosition]==0)
+      @patternsMatrix.push([firstPosition,board[secondPosition]])
+    end
+  end
+  
   def get_first_available_move(board)
     unless board[4] == 0
-      move = [board.index(0),nil]
+      @patternsMatrix.push([board.index(0),-1])
     else
-      move = [4,nil]
+      @patternsMatrix.push([4,-1])
     end
-    move
   end
 
 end
