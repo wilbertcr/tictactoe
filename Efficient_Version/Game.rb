@@ -3,7 +3,7 @@ require "./Constants.rb"
 require "./Players.rb"
 require "./Display.rb"
 
-class Tic_tac_toe
+class Game
 
   def initialize()
     @Player1 = Players.human
@@ -92,5 +92,5 @@ class Tic_tac_toe
           
 end
 
-Game = Tic_tac_toe.new()
+Game = Game.new()
 Game.play()

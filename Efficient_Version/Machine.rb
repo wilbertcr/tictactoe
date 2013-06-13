@@ -38,40 +38,33 @@ class Machine
   end
   
   def find_vertical_pattern()
-    top_position = 0
-    mid_position = 3
-    bottom_position = 6
+    top_position = 0; mid_position = 3; bottom_position = 6
     3.times do 
       checkLinesForPattern(top_position, mid_position, bottom_position)
-      top_position +=1
-      mid_position +=1
-      bottom_position +=1
+      top_position +=1; mid_position +=1; bottom_position +=1
     end
   end
   
   def find_horizontal_pattern()
-    left_position = 0
-    mid_position = 1
-    right_position = 2
+    left_position = 0; mid_position = 1; right_position = 2
     3.times do 
       checkLinesForPattern(left_position, mid_position, right_position)
-      left_position +=3
-      mid_position +=3
-      right_position +=3
+      left_position +=3; mid_position +=3; right_position +=3
     end
   end
 
   def find_diagonal_pattern()
-    first = 0
-    second = 4
-    third = 8
+    first = 0 ; second = 4; third = 8
     2.times do 
       checkLinesForPattern(first, second, third)
-      first = 2
-      third = 6
+      first = 2; third = 6
     end
   end  
   
+  def get_first_available_move()
+    @board[4] == 0 ? @patternsMatrix.push([4,-1]) : @patternsMatrix.push([@board.index(0),-1]) 
+  end
+
   def checkLinesForPattern(firstPosition, secondPosition, thirdPosition)
     if    (@board[firstPosition] != 0 && @board[firstPosition]==@board[secondPosition] && 
       @board[thirdPosition]==0)
@@ -85,8 +78,4 @@ class Machine
     end
   end
   
-  def get_first_available_move()
-    @board[4] == 0 ? @patternsMatrix.push([4,-1]) : @patternsMatrix.push([@board.index(0),-1]) 
-  end
-
 end
