@@ -12,7 +12,7 @@ class Game
   Winner_not_found = -1
   
   def initialize()
-    @Player1 = Players.machine(2,1)
+    @Player1 = Players.human(2,1)
     @Player1.name= "Hal 1"
     @Player2 = Players.machine(1,2)
     @Player2.name= "Hal 2"
@@ -68,7 +68,5 @@ class Game
           
 end
 
-10.times do
-session = Game.new()
+session = Game.new
 session.play()
-end

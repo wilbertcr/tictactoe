@@ -1,4 +1,3 @@
-
 class Machine
   attr_accessor :getMove, :identifier, :name
   
@@ -15,10 +14,8 @@ class Machine
   end
   
   def get_move(board)
-    start_time = Time.now
     @board = board
     strategies_array = get_strategies_array()
-    #puts "#{@name}'s strategy:#{strategies_array}"
     winning_strategy = strategies_array[0]  
     blocking_strategy = strategies_array[1]
     no_strategy = strategies_array[2]
@@ -29,8 +26,6 @@ class Machine
         move = no_strategy
       end
     end
-    end_time = Time.now
-    #puts "Machine took #{end_time-start_time} seconds."
     move.first
   end  
 
@@ -81,8 +76,8 @@ class Machine
     elsif @board[8] == 0
       @patternsMatrix.push([8,-1])
     else
-      rand = Random.new
-      move = rand.rand(0..8)
+      random_generator = Random.new
+      move = random_generator.rand(0..8)
       while @board[move] != 0
         move = rand.rand(0..8)
       end

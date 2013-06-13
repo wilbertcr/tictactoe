@@ -1,7 +1,7 @@
 
 class Human
   
-  attr_accessor :getMove, :identifier, :name
+  attr_accessor :identifier, :name
 
   @board
   @identifier
@@ -14,28 +14,21 @@ class Human
   end
   
   def get_move(board)
+    @board = board
     move = 0
-    while move_is_outside_board(move) || desired_move_taken(board,move)
+    while invalid_move?(move)
       puts "Please provide your move:"
       STDOUT.flush()
       move = gets.chomp.to_i
-      if move_is_outside_board(move)
-        puts "Sorry, only numbers between 1 and 9"
-      elsif desired_move_taken(board,move)
-        puts "Sorry, that position is taken"
-      end  
+      puts "Incorrect input provided, please try again."  
     end
     move-1 #Array is 0...8, player's options are 1..9
   end
   
   private
   
-  def move_is_outside_board(move)
-    return !(1..9).include?(move)
-  end
-  
-  def desired_move_taken(board,move)
-    return board[move-1]!=0
+  def invalid_move?(move)
+    !(1..9).include?(move) || @board[move-1]!=0
   end
 
 end
