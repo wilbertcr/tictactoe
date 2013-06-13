@@ -1,5 +1,4 @@
 require "./Efficient_Version/Board.rb"
-require "./Efficient_Version/Constants.rb"
 require "./Efficient_Version/Players.rb"
 require "./Efficient_Version/Display.rb"
 require "./Efficient_Version/Human.rb"
