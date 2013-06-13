@@ -1,8 +1,14 @@
-require "./Board.rb"
-
 class Display
-    
-  def self.game_instructions()  
+  
+  @player1
+  @player2
+  
+  def initialize(player1, player2)
+    @player1 = player1
+    @player2 = player2
+  end
+
+  def game_instructions()  
     puts "Goal:"
     puts ""
     puts "The goal of Tic Tac Toe is to be the first player to get"
@@ -16,7 +22,7 @@ class Display
     board([1,2,3,4,5,6,7,8,9],false)
   end
   
-  def self.board(board=@getBoard,security=true)
+  def board(board,security=true)
     puts "-------------\n"
     puts "|#{get_symbol(board[0],security)}|#{get_symbol(board[1],security)}|#{get_symbol(board[2],security)}|\n"
     puts "-------------\n"
@@ -26,20 +32,23 @@ class Display
     puts "-------------\n"
   end
   
-  def self.game_result(winner)
-    if winner == Constants.HUMAN
-          puts "Congratulations Human"
-        elsif winner == Constants.MACHINE
-          puts "The machine won :("
-        else #Game is a tie
-          puts "Game was a tie"
+  def game_result(winner)
+    if winner == @player1.identifier
+      puts "Congratulations #{@player1.name}"
+    elsif winner == @player2.identifier
+      puts "Congratulations #{@player2.name}"
+    else #Game is a tie
+      puts "Game was a tie"
     end
   end
 
+  def player_move(player,move)
+    puts "#{player.name} move is: #{move+1}"
+  end
   
   private 
   
-  def self.get_symbol(value,security_on=true)
+  def get_symbol(value,security_on=true)
     if security_on
       case value
       when 0
@@ -57,6 +66,5 @@ class Display
       return " #{value} "
     end
   end
-
   
 end

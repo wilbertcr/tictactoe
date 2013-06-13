@@ -1,4 +1,5 @@
 class Constants
+  
   def self.player1
     1
   end

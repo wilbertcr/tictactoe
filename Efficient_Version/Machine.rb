@@ -1,21 +1,27 @@
-require './Constants.rb'
 
 class Machine
-  attr_accessor :getMove
+  attr_accessor :getMove, :identifier, :name
   
   @patternsMatrix
   @board
+  @identifier
+  @opponent_identifier
 
-  def initialize()
+  def initialize(my_identifier,other_guy_identifier)
     @patternsMatrix = []
+    @identifier = my_identifier
+    @opponent_identifier = other_guy_identifier
+    @name = "Hal"
   end
   
-  def getMove(board)
-    @board = board 
-    strategiesArray = getStrategiesArray()
-    winning_strategy = strategiesArray[0]  
-    blocking_strategy = strategiesArray[1]
-    no_strategy = strategiesArray[2]
+  def get_move(board)
+    start_time = Time.now
+    @board = board
+    strategies_array = get_strategies_array()
+    #puts "#{@name}'s strategy:#{strategies_array}"
+    winning_strategy = strategies_array[0]  
+    blocking_strategy = strategies_array[1]
+    no_strategy = strategies_array[2]
     move = winning_strategy     
     if move.nil?
       move = blocking_strategy
@@ -23,18 +29,20 @@ class Machine
         move = no_strategy
       end
     end
+    end_time = Time.now
+    #puts "Machine took #{end_time-start_time} seconds."
     move.first
   end  
-  
+
   private
   
-  def getStrategiesArray()
+  def get_strategies_array()
     @patternsMatrix = []
     find_vertical_pattern()
     find_horizontal_pattern()
     find_diagonal_pattern()
     get_first_available_move()
-    return [@patternsMatrix.rassoc(Constants.MACHINE),@patternsMatrix.rassoc(1),@patternsMatrix.rassoc(-1)]
+    return [@patternsMatrix.rassoc(@identifier),@patternsMatrix.rassoc(@opponent_identifier),@patternsMatrix.rassoc(-1)]
   end
   
   def find_vertical_pattern()
@@ -62,11 +70,28 @@ class Machine
   end  
   
   def get_first_available_move()
-    @board[4] == 0 ? @patternsMatrix.push([4,-1]) : @patternsMatrix.push([@board.index(0),-1]) 
+    if @board[4] == 0
+      @patternsMatrix.push([4,-1])
+    elsif @board[0] == 0
+      @patternsMatrix.push([0,-1])
+    elsif @board[2] == 0
+      @patternsMatrix.push([2,-1])
+    elsif @board[6] == 0
+      @patternsMatrix.push([6,-1])
+    elsif @board[8] == 0
+      @patternsMatrix.push([8,-1])
+    else
+      rand = Random.new
+      move = rand.rand(0..8)
+      while @board[move] != 0
+        move = rand.rand(0..8)
+      end
+      @patternsMatrix.push([move,-1])
+    end 
   end
 
   def checkLinesForPattern(firstPosition, secondPosition, thirdPosition)
-    if    (@board[firstPosition] != 0 && @board[firstPosition]==@board[secondPosition] && 
+    if (@board[firstPosition] != 0 && @board[firstPosition]==@board[secondPosition] && 
       @board[thirdPosition]==0)
       @patternsMatrix.push([thirdPosition,@board[firstPosition]]) 
     elsif (@board[firstPosition] != 0 && @board[firstPosition]==@board[thirdPosition] && 

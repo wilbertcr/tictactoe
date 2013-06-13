@@ -1,16 +1,11 @@
-require "./Human.rb"
-require "./Machine.rb"
 class Players
   
-  attr_accessor :human, :machine
-
-  def human
-    Human().new()
+  def self.human(my_identifier, opponent_identifier)
+    Human.new(my_identifier, opponent_identifier)
   end
 
-  def machine
-    Machine.new
+  def self.machine(my_identifier,opponent_identifier)
+    Machine.new(my_identifier, opponent_identifier)
   end
-  
-    
+
 end

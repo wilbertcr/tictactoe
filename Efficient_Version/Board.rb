@@ -1,17 +1,17 @@
-require './Constants.rb'
 
 class Board
   
-  attr_accessor :getBoard
+  attr_accessor :get_board
   
-  @patternsCheck
+  @patterns_array
+  Winner_not_found = -1
   
   def initialize()
-    @getBoard = [0,0,0,0,0,0,0,0,0]    
+    @get_board = [0,0,0,0,0,0,0,0,0]    
   end
 
-  def update(player,position)
-    player == "human" ? @getBoard[position] = Constants.HUMAN : @getBoard[position] = Constants.MACHINE 
+  def update(player_identifier ,position)
+    @get_board[position] = player_identifier 
   end
     
   def game_tied?(board)
@@ -23,10 +23,10 @@ class Board
   end
   
   def check_board_for_winner(board)
-    @patternsCheck = []
+    @patterns_array = []
     check_patterns()
-    winners = @patternCheck.first
-    winners.nil? ? Constants.OTHER : winners
+    winners = @patterns_array.first
+    winners.nil? ? Winner_not_found : winners
   end
 
   private
@@ -38,33 +38,33 @@ class Board
   end
 
   def check_vertical_pattern()
-    top_cell = 0, center = 3, bottom_cell = 6
+    top_cell = 0; center = 3; bottom_cell = 6;
     3.times do
-      patternScanner(leftPosition, center, rightPosition)
+      pattern_scanner(top_cell, center, bottom_cell)
       top_cell +=1; center +=1; bottom_cell +=1;
     end
   end  
   
   def check_horizontal_pattern()
-    left_cell = 0, center = 1, right_cell = 2
+    left_cell = 0; center = 1; right_cell = 2;
     3.times do
-      patternScanner(leftPosition, center, rightPosition)
+      pattern_scanner(left_cell, center, right_cell)
       left_cell +=3; center +=3; right_cell +=3;
     end
   end
   
   def check_diagonal_pattern()
-    first_cell = 0, center = 4, last_cell = 8
+    first_cell = 0; center = 4; last_cell = 8;
     2.times do
-      patternsScanner(first_cell, center, last_cell)
+      pattern_scanner(first_cell, center, last_cell)
       first_cell = 2; last_cell = 6;
     end
   end    
   
-  def patternScanner(firstCell, secondCell, thirdCell)
-    if (@getBoard[firstCell] != 0 && @getBoard[firstCell]==@getBoard[secondCell] &&
-        @getBoard[secondCell]==@getBoard[thirdCell])
-      @patternsCheck.push(@getBoard[firstCell])  
+  def pattern_scanner(first_cell, second_cell, third_cell)
+    if (@get_board[first_cell] != 0 && @get_board[first_cell] == @get_board[second_cell] && 
+      @get_board[second_cell] == @get_board[third_cell])
+      @patterns_array.push(@get_board[first_cell])  
     end
   end
   

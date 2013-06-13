@@ -1,96 +1,75 @@
-require "./Board.rb"
-require "./Constants.rb"
-require "./Players.rb"
-require "./Display.rb"
+require "./Efficient_Version/Board.rb"
+require "./Efficient_Version/Constants.rb"
+require "./Efficient_Version/Players.rb"
+require "./Efficient_Version/Display.rb"
+require "./Efficient_Version/Human.rb"
+require "./Efficient_Version/Machine.rb"
 
 class Game
 
+  attr_reader :Player1,:Player2
+  @Player1
+  @Player2
+  Winner_not_found = -1
+  
   def initialize()
-    @Player1 = Players.human
-    @Player2 = Players.machine
+    @Player1 = Players.machine(2,1)
+    @Player1.name= "Hal 1"
+    @Player2 = Players.machine(1,2)
+    @Player2.name= "Hal 2"
     @Board = Board.new()
+    @Display = Display.new(@Player1,@Player2)
   end
 
   def play()
     run_pre_game_routine()
     while !game_over?
-      if @first_Player == Constants.HUMAN
-        human_turn()
+        player1_turn()
         update_winner_value
         if game_over?
           break
         end
-        machine_turn()
+        player2_turn()
         update_winner_value
-      else
-        machine_turn()
-        update_winner_value
-        if game_over?
-          break
-        end
-        human_turn()
-        update_winner_value
-      end
     end
-    Display.game_result(@winner)
+    @Display.game_result(@winner)
   end
 
   private
   
   def update_winner_value()
-    @winner = @Board.check_board_for_winner(@Board.getBoard)
+    @winner = @Board.check_board_for_winner(@Board.get_board)
   end
     
   def run_pre_game_routine()
-    Display.game_instructions()
-    @first_Player = get_first_player()
-    @winner = @Board.check_board_for_winner(@Board.getBoard)
-    Display.board(@Board.getBoard)    
-  end
-
-  def get_first_player()
-    player = nil
-    @option = " "    
-    while !correct_input?()
-      puts "Would you like to go first, or to have the machine go first? (y/n)"
-      STDOUT.flush()
-      @option = gets.chomp.downcase 
-      if @option == "y"
-        player = Constants.HUMAN
-      elsif @option == "n"
-        player = Constants.MACHINE
-      else
-        puts "Sorry, its either 'y' or 'n'" 
-      end 
-    end
-    player
-  end
-
-  def correct_input?()
-    return @option == "y" || @option =="n"
+    @Display.game_instructions()
+    @winner = @Board.check_board_for_winner(@Board.get_board)    
   end
 
   def game_over?()
-    return @winner != Constants.OTHER || @Board.game_tied?(@Board.getBoard)
+    return @winner != Winner_not_found || @Board.game_tied?(@Board.get_board)
   end 
-    
-  def machine_turn()
-    machine_move = @Players.machine.getMove(@Board.getBoard)
-    puts "Machine move is: #{machine_move+1}"
-    update_and_display_board("machine", machine_move)
+
+  def player1_turn()
+    player1_move = @Player1.get_move(@Board.get_board)
+    @Display.player_move(@Player1,player1_move)
+    update_and_display_board(@Player1.identifier, player1_move)
   end
-  
-  def human_turn()
-    human_move = @Players.human.getMove(@Board.getBoard)
-    update_and_display_board("human", human_move)
+      
+  def player2_turn()
+    player2_move = @Player2.get_move(@Board.get_board)
+    @Display.player_move(@Player2,player2_move)
+    update_and_display_board(@Player2.identifier, player2_move)
   end
   
   def update_and_display_board(player,move)
     @Board.update(player,move)
-    Display.board(@Board.getBoard)
+    @Display.board(@Board.get_board)
   end
           
 end
 
-Game = Game.new()
-Game.play()
+10.times do
+session = Game.new()
+session.play()
+end
