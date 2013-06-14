@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+require "../lib/tic_tac_toe.rb"
+
+first_player = Players.machine(1,2)
+first_player.name=("Hal")
+second_player = Players.human(2,1)
+second_player.name=("Wilbert")
+
+session = Game.new(first_player,second_player)
+session.play()
