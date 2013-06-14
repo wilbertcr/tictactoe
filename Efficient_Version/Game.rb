@@ -1,8 +1,8 @@
-require "./Efficient_Version/Board.rb"
-require "./Efficient_Version/Players.rb"
-require "./Efficient_Version/Display.rb"
-require "./Efficient_Version/Human.rb"
-require "./Efficient_Version/Machine.rb"
+require_relative "./Board.rb"
+require_relative "./Players.rb"
+require_relative "./Display.rb"
+require_relative "./Human.rb"
+require_relative "./Machine.rb"
 
 class Game
 
@@ -19,31 +19,15 @@ class Game
   end
 
   def play()
-    run_pre_game_routine()
-    while !game_over?
+    @Display.game_instructions() 
+    while !@Board.game_over?
       play_turn()
-      update_winner_value
       update_current_player
     end
-    @Display.game_result(@winner)
+    @Display.game_result(@Board.get_winner_id)
   end
 
-  
-  
   private
-  
-  def update_winner_value()
-    @winner = @Board.get_winner_id()
-  end
-    
-  def run_pre_game_routine()
-    @Display.game_instructions()
-    @winner = @Board.get_winner_id()    
-  end
-
-  def game_over?()
-    return @winner != Winner_not_found || @Board.game_tied?()
-  end 
   
   def play_turn()
     player_move = @current_player.get_move(@Board)

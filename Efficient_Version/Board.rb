@@ -11,6 +11,10 @@ class Board
     return @board.index(0) == nil
   end
   
+  def game_over?()
+    return get_winner_id() != Winner_not_found || game_tied?()
+  end
+  
   def get_winner_id()
     @patterns_array = []
     check_patterns()
