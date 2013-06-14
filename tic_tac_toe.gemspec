@@ -6,6 +6,6 @@ Gem::Specification.new do |s|
 	s.description = "Console Tic Tac Toe game"
 	s.author  = "Wilbert Sequeira"
 	s.email   = "wilbertcr@gmail.com"
-  s.require_path = 'lib'
-	s.files   = ["lib/tic_tac_toe"]
+	s.files   = Dir.glob("lib/**/*.rb")
+  s.executables = ["tic_tac_toe"]
 end
