@@ -6,15 +6,34 @@ class Board
   def initialize()
     @board = [0,0,0,0,0,0,0,0,0]    
   end
-
-  def empty_cell?(position)
-    @board[position] == 0
+  
+  def game_tied?()
+    return @board.index(0) == nil
+  end
+  
+  def get_winner_id()
+    @patterns_array = []
+    check_patterns()
+    winner = @patterns_array.first
+    winner.nil? ? Winner_not_found : winner
   end
   
   def get_cell(position)
     @board[position]
   end
-  
+    
+  def set_cell(value, cell_position)
+    @board[cell_position] = value
+  end
+
+  def empty_cell?(position)
+    @board[position] == 0
+  end
+
+  def cells_equal?(first_cell,second_cell)
+    get_cell(first_cell)==get_cell(second_cell)
+  end
+
   def cell_symbol(position)
     value = get_cell(position)
     case value
@@ -26,26 +45,7 @@ class Board
       " O "
     end
   end
-  
-  def set_cell(value, cell_position)
-    @board[cell_position] = value
-  end
-  
-  def cells_equal?(first_cell,second_cell)
-    get_cell(first_cell)==get_cell(second_cell)
-  end
-    
-  def game_tied?()
-    return @board.index(0) == nil
-  end
-  
-  def get_winner_id()
-    @patterns_array = []
-    check_patterns()
-    winner = @patterns_array.first
-    winner.nil? ? Winner_not_found : winner
-  end
-
+        
   private
   
   def check_patterns()
@@ -79,8 +79,8 @@ class Board
   end    
   
   def pattern_scanner(first_cell, second_cell, third_cell)
-    if (!empty_cell?(first_cell) && get_cell(first_cell) == get_cell(second_cell) && 
-      get_cell(second_cell) == get_cell(third_cell))
+    if (!empty_cell?(first_cell) && cells_equal?(first_cell,second_cell) && 
+      cells_equal?(second_cell,third_cell))
       @patterns_array.push(get_cell(first_cell))  
     end
   end
