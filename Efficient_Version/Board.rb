@@ -1,32 +1,49 @@
-
 class Board
-  
-  attr_accessor :get_board
-  
+    
   @patterns_array
   Winner_not_found = -1
   
   def initialize()
-    @get_board = [0,0,0,0,0,0,0,0,0]    
+    @board = [0,0,0,0,0,0,0,0,0]    
   end
 
-  def update(player_identifier ,position)
-    @get_board[position] = player_identifier 
-  end
-    
-  def game_tied?(board)
-    return board_full?(board)
-  end
-    
-  def board_full?(board)
-    return board.index(0) == nil
+  def empty_cell?(position)
+    @board[position] == 0
   end
   
-  def check_board_for_winner(board)
+  def get_cell(position)
+    @board[position]
+  end
+  
+  def cell_symbol(position)
+    value = get_cell(position)
+    case value
+    when 0
+      "   "
+    when 1
+      " X "
+    when 2
+      " O "
+    end
+  end
+  
+  def set_cell(value, cell_position)
+    @board[cell_position] = value
+  end
+  
+  def cells_equal?(first_cell,second_cell)
+    get_cell(first_cell)==get_cell(second_cell)
+  end
+    
+  def game_tied?()
+    return @board.index(0) == nil
+  end
+  
+  def get_winner_id()
     @patterns_array = []
     check_patterns()
-    winners = @patterns_array.first
-    winners.nil? ? Winner_not_found : winners
+    winner = @patterns_array.first
+    winner.nil? ? Winner_not_found : winner
   end
 
   private
@@ -62,10 +79,10 @@ class Board
   end    
   
   def pattern_scanner(first_cell, second_cell, third_cell)
-    if (@get_board[first_cell] != 0 && @get_board[first_cell] == @get_board[second_cell] && 
-      @get_board[second_cell] == @get_board[third_cell])
-      @patterns_array.push(@get_board[first_cell])  
+    if (!empty_cell?(first_cell) && get_cell(first_cell) == get_cell(second_cell) && 
+      get_cell(second_cell) == get_cell(third_cell))
+      @patterns_array.push(get_cell(first_cell))  
     end
   end
-  
+
 end

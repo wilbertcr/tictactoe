@@ -1,15 +1,18 @@
+require "./Efficient_Version/Board.rb"
+
 class Machine
-  attr_accessor :getMove, :identifier, :name
+  attr_accessor :name
+  attr_reader :id
   
   @patternsMatrix
   @board
-  @identifier
-  @opponent_identifier
+  @id
+  @opponent_id
 
-  def initialize(my_identifier,other_guy_identifier)
+  def initialize(my_id,opponent_id)
     @patternsMatrix = []
-    @identifier = my_identifier
-    @opponent_identifier = other_guy_identifier
+    @id = my_id
+    @opponent_id = opponent_id
     @name = "Hal"
   end
   
@@ -37,7 +40,7 @@ class Machine
     find_horizontal_pattern()
     find_diagonal_pattern()
     get_first_available_move()
-    return [@patternsMatrix.rassoc(@identifier),@patternsMatrix.rassoc(@opponent_identifier),@patternsMatrix.rassoc(-1)]
+    return [@patternsMatrix.rassoc(@id),@patternsMatrix.rassoc(@opponent_id),@patternsMatrix.rassoc(-1)]
   end
   
   def find_vertical_pattern()
@@ -65,37 +68,37 @@ class Machine
   end  
   
   def get_first_available_move()
-    if @board[4] == 0
+    if @board.empty_cell?(4)
       @patternsMatrix.push([4,-1])
-    elsif @board[0] == 0
+    elsif @board.empty_cell?(0)
       @patternsMatrix.push([0,-1])
-    elsif @board[2] == 0
+    elsif @board.empty_cell?(2)
       @patternsMatrix.push([2,-1])
-    elsif @board[6] == 0
+    elsif @board.empty_cell?(6)
       @patternsMatrix.push([6,-1])
-    elsif @board[8] == 0
+    elsif @board.empty_cell?(8)
       @patternsMatrix.push([8,-1])
     else
       random_generator = Random.new
       move = random_generator.rand(0..8)
-      while @board[move] != 0
-        move = rand.rand(0..8)
+      while !@board.empty_cell?(move)
+        move = random_generator.rand(0..8)
       end
       @patternsMatrix.push([move,-1])
     end 
   end
 
-  def checkLinesForPattern(firstPosition, secondPosition, thirdPosition)
-    if (@board[firstPosition] != 0 && @board[firstPosition]==@board[secondPosition] && 
-      @board[thirdPosition]==0)
-      @patternsMatrix.push([thirdPosition,@board[firstPosition]]) 
-    elsif (@board[firstPosition] != 0 && @board[firstPosition]==@board[thirdPosition] && 
-      @board[secondPosition]==0)
-      @patternsMatrix.push([secondPosition,@board[firstPosition]])
-    elsif (@board[secondPosition] != 0 && @board[secondPosition]==@board[thirdPosition] && 
-      @board[firstPosition]==0)
-      @patternsMatrix.push([firstPosition,@board[secondPosition]])
+  def checkLinesForPattern(first_position, second_position, third_position)
+    if (!@board.empty_cell?(first_position) && @board.cells_equal?(first_position,second_position) && 
+      @board.empty_cell?(third_position))
+      @patternsMatrix.push([third_position,@board.get_cell(first_position)]) 
+    elsif (!@board.empty_cell?(first_position) && @board.cells_equal?(first_position,third_position) && 
+      @board.empty_cell?(second_position))
+      @patternsMatrix.push([second_position,@board.get_cell(first_position)])
+    elsif (!@board.empty_cell?(second_position) &&  @board.cells_equal?(second_position,third_position) && 
+      @board.empty_cell?(first_position))
+      @patternsMatrix.push([first_position,@board.get_cell(second_position)])
     end
   end
-  
+
 end
