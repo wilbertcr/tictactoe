@@ -29,7 +29,7 @@ class Board
   def empty_cell?(position)
     @board[position] == 0
   end
-
+  
   def cells_equal?(first_cell,second_cell)
     get_cell(first_cell)==get_cell(second_cell)
   end

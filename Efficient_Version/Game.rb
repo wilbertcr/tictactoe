@@ -15,22 +15,21 @@ class Game
     @Player2 = player2
     @Board = Board.new()
     @Display = Display.new(@Player1,@Player2)
+    @current_player = @Player1
   end
 
   def play()
     run_pre_game_routine()
     while !game_over?
-        player1_turn()
-        update_winner_value
-        if game_over?
-          break
-        end
-        player2_turn()
-        update_winner_value
+      play_turn()
+      update_winner_value
+      update_current_player
     end
     @Display.game_result(@winner)
   end
 
+  
+  
   private
   
   def update_winner_value()
@@ -45,18 +44,16 @@ class Game
   def game_over?()
     return @winner != Winner_not_found || @Board.game_tied?()
   end 
+  
+  def play_turn()
+    player_move = @current_player.get_move(@Board)
+    @Display.player_move(@current_player,player_move)
+    update_and_display_board(@current_player.id, player_move)
+  end
 
-  def player1_turn()
-    player1_move = @Player1.get_move(@Board)
-    @Display.player_move(@Player1,player1_move)
-    update_and_display_board(@Player1.id, player1_move)
-  end
-      
-  def player2_turn()
-    move = @Player2.get_move(@Board)
-    @Display.player_move(@Player2,move)
-    update_and_display_board(@Player2.id, move)
-  end
+  def update_current_player()
+    @current_player = (@current_player == @Player1) ? @Player2 : @Player1
+  end  
   
   def update_and_display_board(player,move)
     @Board.set_cell(player,move)
